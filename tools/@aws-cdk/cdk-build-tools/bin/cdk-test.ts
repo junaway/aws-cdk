@@ -27,15 +27,20 @@ async function main() {
     timers,
     env: {
       CDK_DISABLE_STACK_TRACE: '1',
-
-      // by default, fail when deprecated symbols are used in tests.
-      // tests that verify behaviour of deprecated symbols must use the `testDeprecated()` API.
-      JSII_DEPRECATED: 'fail',
     },
   };
 
   if (options.test) {
-    await shell(options.test, defaultShellOptions);
+    await shell(options.test, {
+      ...defaultShellOptions,
+      env: {
+        ...defaultShellOptions.env,
+
+        // by default, fail when deprecated symbols are used in tests.
+        // tests that verify behaviour of deprecated symbols must use the `testDeprecated()` API.
+        JSII_DEPRECATED: 'fail',
+      },
+    });
   }
 
   const testFiles = await unitTestFiles();
